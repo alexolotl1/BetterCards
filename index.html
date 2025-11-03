@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetterCards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <h1>BetterCards</h1>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">Card Groups</div>
+            <div class="group-list">
+                <div class="group-item">group 1</div>
+                <div class="group-item">group 2</div>
+                <div class="group-item">group 3</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="controls">
+                <button id="createCardBtn" class="control-btn">Create Flashcard</button>
+            </div>
+            <div class="cards-area">
+                <div id="cards-container">
+            
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Card Modal -->
+    <div id="createCardModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create New Flashcard</h2>
+            <div class="form-group">
+                <label for="cardFront">Front Side:</label>
+                <textarea id="cardFront" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="cardBack">Back Side:</label>
+                <textarea id="cardBack" rows="4"></textarea>
+            </div>
+            <button id="saveCardBtn" class="control-btn">Save Card</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
