@@ -1,29 +1,96 @@
-let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+import { startStudyMode, stopStudyMode, handleCardFlip, handleNextCard } from './studyMode.js';
+
+let cardGroups = JSON.parse(localStorage.getItem('cardGroups')) || [];
+let currentGroupId = null;
+
+document.getElementById('startStudyBtn').addEventListener('click', () => startStudyMode(currentGroupId));
+document.getElementById('stopStudyBtn').addEventListener('click', stopStudyMode);
+document.querySelector('.study-card').addEventListener('click', handleCardFlip);
+document.getElementById('nextCardBtn').addEventListener('click', handleNextCard);
 
 const createCardBtn = document.getElementById('createCardBtn');
-const modal = document.getElementById('createCardModal');
-const closeModal = document.querySelector('.close-modal');
+const createGroupBtn = document.getElementById('createGroupBtn');
+const deleteGroupBtn = document.getElementById('deleteGroupBtn');
+const cardModal = document.getElementById('createCardModal');
+const groupModal = document.getElementById('createGroupModal');
+const closeCardModal = document.querySelector('.close-modal');
+const closeGroupModal = document.querySelector('.close-group-modal');
 const saveCardBtn = document.getElementById('saveCardBtn');
+const saveGroupBtn = document.getElementById('saveGroupBtn');
+const groupNameInput = document.getElementById('groupName');
 const cardsContainer = document.getElementById('cards-container');
+const groupList = document.querySelector('.group-list');
+const currentGroupName = document.getElementById('currentGroupName');
+const cardCount = document.getElementById('cardCount');
+const totalStudyTime = document.getElementById('totalStudyTime');
+const lastStudied = document.getElementById('lastStudied');
+const startStudyBtn = document.getElementById('startStudyBtn');
+const stopStudyBtn = document.getElementById('stopStudyBtn');
+const normalView = document.getElementById('normalView');
+const studyView = document.getElementById('studyView');
+const studyCard = document.querySelector('.study-card');
+const cardsStudiedElement = document.getElementById('cardsStudied');
+const studyTimeElement = document.getElementById('studyTime');
 
-createCardBtn.addEventListener('click', openModal);
-closeModal.addEventListener('click', closeModalHandler);
+createCardBtn.addEventListener('click', openCardModal);
+createGroupBtn.addEventListener('click', openGroupModal);
+deleteGroupBtn.addEventListener('click', deleteCurrentGroup);
+closeCardModal.addEventListener('click', () => closeModal(cardModal));
+closeGroupModal.addEventListener('click', () => closeModal(groupModal));
 saveCardBtn.addEventListener('click', saveCard);
+saveGroupBtn.addEventListener('click', saveGroup);
+studyCard.addEventListener('click', handleCardFlip);
 
 window.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        closeModalHandler();
+    if (e.target === cardModal) {
+        closeModal(cardModal);
+    } else if (e.target === groupModal) {
+        closeModal(groupModal);
     }
 });
 
-function openModal() {
-    modal.style.display = 'block';
+function openCardModal() {
+    if (!currentGroupId) {
+        alert('Please select a group first!');
+        return;
+    }
+    cardModal.style.display = 'block';
     document.getElementById('cardFront').value = '';
     document.getElementById('cardBack').value = '';
 }
 
-function closeModalHandler() {
+function openGroupModal() {
+    groupModal.style.display = 'block';
+    groupNameInput.value = '';
+    groupNameInput.focus();
+}
+
+function closeModal(modal) {
     modal.style.display = 'none';
+}
+
+function saveGroup() {
+    const groupName = groupNameInput.value.trim();
+    if (!groupName) {
+        alert('Please enter a group name');
+        return;
+    }
+    
+    const newGroup = {
+        id: Date.now().toString(),
+        name: groupName,
+        cards: [],
+        totalTimeStudied: 0,
+        totalCardsStudied: 0,
+        lastStudied: null,
+        created: new Date().toISOString()
+    };
+
+    cardGroups.push(newGroup);
+    localStorage.setItem('cardGroups', JSON.stringify(cardGroups));
+    closeModal(groupModal);
+    displayGroups();
+    selectGroup(newGroup.id);
 }
 
 function saveCard() {
@@ -35,42 +102,178 @@ function saveCard() {
         return;
     }
 
-    const newCard = {
-        id: Date.now(), 
-        front: frontText,
-        back: backText
-    };
-
-    flashcards.push(newCard);
-    localStorage.setItem('flashcards', JSON.stringify(flashcards));
-    
-    displayCards();
-    closeModalHandler();
-}
-
-function displayCards() {
-    cardsContainer.innerHTML = '';
-    
-    if (flashcards.length === 0) {
-        cardsContainer.innerHTML = '<div class="placeholder-text">No flashcards yet. Create one to get started!</div>';
+    if (!currentGroupId) {
+        alert('Please select a group first!');
         return;
     }
 
-    flashcards.forEach(card => {
+    const groupIndex = cardGroups.findIndex(g => g.id === currentGroupId);
+    if (groupIndex === -1) return;
+
+    const newCard = {
+        id: Date.now().toString(),
+        front: frontText,
+        back: backText,
+        confidenceLevel: 0,
+        timesReviewed: 0,
+        created: new Date().toISOString()
+    };
+
+    if (!cardGroups[groupIndex].cards) {
+        cardGroups[groupIndex].cards = [];
+    }
+    
+    cardGroups[groupIndex].cards.push(newCard);
+    localStorage.setItem('cardGroups', JSON.stringify(cardGroups));
+    
+    displayCards(cardGroups[groupIndex]);
+    closeModal(cardModal);
+    
+    cardCount.textContent = cardGroups[groupIndex].cards.length;
+}
+
+function getMainGroup() {
+    const mainGroup = cardGroups.find(g => g.name === 'Main');
+    if (!mainGroup) {
+        const newMainGroup = {
+            id: 'main',
+            name: 'Main',
+            cards: [],
+            totalTimeStudied: 0,
+            totalCardsStudied: 0,
+            lastStudied: null,
+            created: new Date().toISOString()
+        };
+        cardGroups.unshift(newMainGroup);
+        localStorage.setItem('cardGroups', JSON.stringify(cardGroups));
+        return newMainGroup;
+    }
+    return mainGroup;
+}
+
+function selectGroup(groupId) {
+    currentGroupId = groupId;
+    const group = cardGroups.find(g => g.id === groupId);
+    if (!group) return;
+
+    document.querySelectorAll('.group-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.groupId === groupId) {
+            item.classList.add('active');
+        }
+    });
+
+    currentGroupName.textContent = group.name;
+    cardCount.textContent = group.cards ? group.cards.length : 0;
+    totalStudyTime.textContent = formatStudyTime(group.totalTimeStudied || 0);
+    lastStudied.textContent = group.lastStudied ? formatDate(group.lastStudied) : 'Never';
+
+    displayCards(group);
+}
+
+function displayGroups() {
+    groupList.innerHTML = '';
+    
+    cardGroups.forEach(group => {
+        const groupElement = document.createElement('div');
+        groupElement.className = 'group-item';
+        groupElement.dataset.groupId = group.id;
+        if (group.id === currentGroupId) {
+            groupElement.classList.add('active');
+        }
+        groupElement.textContent = group.name;
+        
+        groupElement.addEventListener('click', () => selectGroup(group.id));
+        groupList.appendChild(groupElement);
+    });
+}
+
+function displayCards(group) {
+    cardsContainer.innerHTML = '';
+    
+    if (!group.cards || group.cards.length === 0) {
+        cardsContainer.innerHTML = '<div class="placeholder-text">No flashcards in this group yet. Create one to get started!</div>';
+        return;
+    }
+
+    group.cards.forEach(card => {
         const cardElement = document.createElement('div');
         cardElement.className = 'flashcard';
-        cardElement.innerHTML = `
-            <div class="card-side front-side">
-                <strong>Front:</strong><br>
-                ${card.front}
-            </div>
-            <div class="card-side back-side">
-                <strong>Back:</strong><br>
-                ${card.back}
-            </div>
-        `;
+
+        const content = document.createElement('div');
+        content.className = 'card-content';
+
+        const front = document.createElement('div');
+        front.className = 'card-side front-side';
+        front.textContent = card.front;
+
+        const back = document.createElement('div');
+        back.className = 'card-side back-side';
+        back.textContent = card.back;
+
+        content.appendChild(front);
+        content.appendChild(back);
+
+        const actions = document.createElement('div');
+        actions.className = 'card-actions';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', () => {
+            if (confirm('Delete this flashcard?')) {
+                deleteCard(card.id);
+            }
+        });
+
+        actions.appendChild(deleteBtn);
+        cardElement.appendChild(content);
+        cardElement.appendChild(actions);
         cardsContainer.appendChild(cardElement);
     });
 }
 
-displayCards();
+function deleteCard(cardId) {
+    const groupIndex = cardGroups.findIndex(g => g.id === currentGroupId);
+    if (groupIndex === -1) return;
+
+    cardGroups[groupIndex].cards = cardGroups[groupIndex].cards.filter(c => c.id !== cardId);
+    localStorage.setItem('cardGroups', JSON.stringify(cardGroups));
+    displayCards(cardGroups[groupIndex]);
+    
+    cardCount.textContent = cardGroups[groupIndex].cards.length;
+}
+
+function deleteCurrentGroup() {
+    if (!currentGroupId) return;
+    
+    const mainGroup = getMainGroup();
+    if (currentGroupId === mainGroup.id) {
+        alert('Cannot delete the Main group!');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to delete this group and all its cards?')) return;
+
+    cardGroups = cardGroups.filter(g => g.id !== currentGroupId);
+    localStorage.setItem('cardGroups', JSON.stringify(cardGroups));
+    selectGroup(mainGroup.id);
+    displayGroups();
+}
+
+function formatStudyTime(seconds) {
+    if (!seconds) return '0min';
+    const minutes = Math.floor(seconds / 60);
+    return minutes === 1 ? '1min' : `${minutes}min`;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+}
+
+if (cardGroups.length === 0) {
+    getMainGroup();
+}
+displayGroups();
+selectGroup(getMainGroup().id);

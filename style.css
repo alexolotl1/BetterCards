@@ -8,11 +8,13 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f2f5;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
     display: flex;
-    height: 100vh;
+    flex: 1; 
 }
 
 .sidebar {
@@ -26,10 +28,48 @@ body {
 
 .sidebar-header {
     padding: 20px;
-    font-size: 1.2em;
-    font-weight: bold;
     background-color: #0d1642;
     border-bottom: 1px solid #787c9e;
+}
+
+.sidebar-header h1 {
+    font-size: 1.8em;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.group-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.group-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #787c9e;
+}
+
+.group-header h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.group-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control-btn.small {
+    padding: 6px 12px;
+    font-size: 0.9em;
+}
+
+.control-btn.danger {
+    background-color: #e53935;
+}
+
+.control-btn.danger:hover {
+    background-color: #c62828;
 }
 
 .group-list {
@@ -41,11 +81,49 @@ body {
     margin: 5px 0;
     cursor: pointer;
     border-radius: 3px;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
 .group-item:hover {
     background-color: #787c9e;
+}
+
+.group-item.active {
+    background-color: #283593;
+    font-weight: 500;
+}
+
+.group-banner {
+    background-color: #283593;
+    color: white;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.group-banner h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.group-stats {
+    display: flex;
+    gap: 30px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.stat-value {
+    font-size: 1.1em;
+    font-weight: 500;
 }
 
 .main-content {
@@ -71,7 +149,8 @@ body {
     padding: 20px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    height: 300px;
 }
 
 .placeholder-text {
@@ -80,9 +159,8 @@ body {
     text-align: center;
 }
 
-/* Controls section */
 .controls {
-    padding: 20px;
+    padding: 10px;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -108,20 +186,20 @@ body {
     flex-direction: column;
     gap: 20px;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px; 
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
 }
 
 .flashcard {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 18px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: stretch;
+    gap: 16px;
     transition: transform 0.2s;
 }
 
@@ -132,10 +210,146 @@ body {
 
 .card-side {
     flex: 1;
-    padding: 15px;
+    padding: 12px;
     background: #f8f9fa;
     border-radius: 5px;
     min-height: 100px;
+}
+
+.content-controls {
+    padding-right: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.card-content {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+}
+
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.btn-delete {
+    background: #e53935;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-delete:hover {
+    background: #c62828;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.study-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.study-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.study-stats {
+    display: flex;
+    gap: 20px;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.study-card-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.next-btn {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a237e;
+    transition: transform 0.2s;
+}
+
+.next-btn:hover {
+    transform: translateX(5px);
+    background-color: #283593;
+}
+
+.next-btn .arrow {
+    color: white;
+}
+
+.study-card {
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.study-card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1.5em;
+    line-height: 1.4;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    background: #f8f9fa;
 }
 
 .modal {

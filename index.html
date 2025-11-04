@@ -7,32 +7,75 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="main-header">
-        <h1>BetterCards</h1>
-    </header>
     <div class="container">
         <div class="sidebar">
-            <div class="sidebar-header">Card Groups</div>
-            <div class="group-list">
-                <div class="group-item">group 1</div>
-                <div class="group-item">group 2</div>
-                <div class="group-item">group 3</div>
+            <div class="sidebar-header">
+                <h1>BetterCards</h1>
+            </div>
+            <div class="group-section">
+                <div class="group-header">
+                    <h2>Card Groups</h2>
+                    <div class="group-controls">
+                        <button id="createGroupBtn" class="control-btn small">New Group</button>
+                        <button id="deleteGroupBtn" class="control-btn small danger">Delete Group</button>
+                    </div>
+                </div>
+                <div class="group-list">
+                
+                </div>
             </div>
         </div>
 
         <div class="main-content">
-            <div class="controls">
+            <div class="group-banner">
+                <h2 id="currentGroupName">Main</h2>
+                <div class="group-stats">
+                    <div class="stat">
+                        <span class="stat-label">Cards:</span>
+                        <span id="cardCount" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Time Studied:</span>
+                        <span id="totalStudyTime" class="stat-value">0min</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Last Studied:</span>
+                        <span id="lastStudied" class="stat-value">Never</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-controls">
+                <button id="startStudyBtn" class="control-btn">Start Studying</button>
                 <button id="createCardBtn" class="control-btn">Create Flashcard</button>
             </div>
-            <div class="cards-area">
-                <div id="cards-container">
             
+            <div id="normalView" class="cards-area">
+                <div id="cards-container"></div>
+            </div>
+
+            <div id="studyView" class="study-area hidden">
+                <div class="study-header">
+                    <div class="study-stats">
+                        <div>Cards Studied: <span id="cardsStudied">0</span></div>
+                        <div>Time: <span id="studyTime">00:00</span></div>
+                    </div>
+                    <button id="stopStudyBtn" class="control-btn">Stop Studying</button>
+                </div>
+                <div class="study-card-container">
+                    <div class="study-card">
+                        <div class="card-inner">
+                            <div class="card-face card-front"></div>
+                            <div class="card-face card-back"></div>
+                        </div>
+                    </div>
+                    <button id="nextCardBtn" class="control-btn next-btn">
+                        <span class="arrow">→</span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Create Card Modal -->
     <div id="createCardModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -49,6 +92,19 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div id="createGroupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-group-modal">&times;</span>
+            <h2>Create New Group</h2>
+            <div class="form-group">
+                <label for="groupName">Group Name:</label>
+                <input type="text" id="groupName" />
+            </div>
+            <button id="saveGroupBtn" class="control-btn">Create Group</button>
+        </div>
+    </div>
+
+    <script src="studyMode.js" type="module"></script>
+    <script src="script.js" type="module"></script>
 </body>
 </html>
