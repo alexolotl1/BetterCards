@@ -25,7 +25,7 @@ body {
     height: 100%;
     overflow-y: auto;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: width 0.3s ease; /* Smooth width changes */
+    transition: width 0.3s ease; 
 }
 
 .sidebar-header {
@@ -311,7 +311,6 @@ body {
     cursor: pointer;
 }
 
-/* Confidence level chart container */
 .confidence-chart {
     display: flex;
     flex-direction: column;
@@ -324,7 +323,6 @@ body {
     width: 100%;
 }
 
-/* Individual chart bar container */
 .chart-bar {
     display: grid;
     grid-template-columns: 30% minmax(100px, 1fr) 60px;
@@ -333,7 +331,6 @@ body {
     padding: 0 10px;
 }
 
-/* Bar label (Level 1-5) */
 .bar-label {
     font-weight: 500;
     text-align: left;
@@ -341,7 +338,6 @@ body {
     color: white;
 }
 
-/* Progress bar container and fill */
 .bar-fill {
     height: 100%;
     width: 0;
@@ -349,7 +345,6 @@ body {
     border-radius: 6px;
 }
 
-/* Color gradients for different levels */
 .chart-bar[data-level="5"] .bar-fill { 
     background: linear-gradient(to right, #00b0ff, #2979ff);
     box-shadow: 0 0 10px rgba(0, 176, 255, 0.3);
@@ -371,7 +366,6 @@ body {
     box-shadow: 0 0 10px rgba(255, 82, 82, 0.3);
 }
 
-/* Card count display */
 .bar-count {
     font-size: 1.1em;
     font-weight: 500;
@@ -405,7 +399,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Card transition animations */
 .study-card.card-exit {
     animation: cardExit 0.3s ease-out forwards;
 }
@@ -414,7 +407,6 @@ body {
     animation: cardEnter 0.3s ease-in forwards;
 }
 
-/* Card content container */
 .card-content {
     display: flex;
     height: 100%;
@@ -424,7 +416,6 @@ body {
 }
 
 
-/* Card text styling and animations */
 .card-text {
     flex: 1;
     display: flex;
@@ -440,7 +431,6 @@ body {
     position: relative;
 }
 
-/* Text slide up animation */
 .card-text.sliding-up {
     transform: translateY(-120%);
     opacity: 0;
@@ -451,7 +441,6 @@ body {
     z-index: 1;
 }
 
-/* Text slide in animation */
 .card-text.sliding-in {
     transform: translateY(120%);
     opacity: 0;
@@ -462,7 +451,6 @@ body {
     z-index: 1;
 }
 
-/* Card divider styling and animation */
 .card-divider {
     height: 2px;
     background-color: #686868;
@@ -478,7 +466,6 @@ body {
     opacity: 1;
 }
 
-/* Card transition animations */
 @keyframes cardExit {
     0% {
         opacity: 1;
@@ -500,7 +487,7 @@ body {
         transform: translateY(0);
     }
 }
-/* Card content container with improved animation support */
+
 .study-card-content {
     flex: 1;
     padding: 30px;
@@ -518,7 +505,6 @@ body {
     display: none;
 }
 
-/* Confidence buttons container - now below card */
 .confidence-buttons {
     display: flex;
     justify-content: center;
@@ -534,7 +520,6 @@ body {
     display: none;
 }
 
-/* Individual confidence buttons with improved styling */
 .confidence-btn {
     width: 60px;
     height: 60px;
@@ -550,7 +535,6 @@ body {
     top: 0;
 }
 
-/* Confidence button colors with gradients */
 .confidence-btn[data-level="1"] { 
     background: linear-gradient(135deg, #ff5252, #d50000);
 }
@@ -568,7 +552,6 @@ body {
     background: linear-gradient(135deg, #00b0ff, #2979ff);
 }
 
-/* Improved hover and active states */
 .confidence-btn:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);

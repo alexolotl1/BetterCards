@@ -3,7 +3,15 @@ import { startStudyMode, stopStudyMode, handleCardFlip, handleNextCard } from '.
 let cardGroups = JSON.parse(localStorage.getItem('cardGroups')) || [];
 let currentGroupId = null;
 
-document.getElementById('startStudyBtn').addEventListener('click', () => startStudyMode(currentGroupId));
+function initializeStudyMode() {
+    if (!currentGroupId) {
+        alert('Please select a card group first!');
+        return;
+    }
+    startStudyMode(currentGroupId);
+}
+
+document.getElementById('startStudyBtn').addEventListener('click', initializeStudyMode);
 document.getElementById('stopStudyBtn').addEventListener('click', stopStudyMode);
 document.querySelector('.study-card').addEventListener('click', handleCardFlip);
 document.getElementById('nextCardBtn').addEventListener('click', handleNextCard);

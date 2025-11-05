@@ -70,18 +70,18 @@ function updateGroupConfidenceSummary(levels) {
 
 //startStudyMode and stopStudyMode functions
 export function startStudyMode(groupId) {
+    currentGroup = getGroupById(groupId);
+    if (!currentGroup || !currentGroup.cards || currentGroup.cards.length === 0) {
+        alert('Add some flashcards to this group first!');
+        return;
+    }
+
     document.getElementById('normalView').classList.add('hidden');
     document.querySelector('.group-banner').classList.add('hidden');
     document.querySelector('.sidebar').classList.add('hidden');
     document.querySelector('.content-controls').classList.add('hidden');
     document.getElementById('studyView').classList.remove('hidden');
     document.getElementById('studyGroupName').textContent = currentGroup.name;
-
-    currentGroup = getGroupById(groupId);
-    if (!currentGroup || !currentGroup.cards || currentGroup.cards.length === 0) {
-        alert('Add some flashcards to this group first!');
-        return;
-    }
 
     currentGroup.cards = initializeCardKnowledge(currentGroup.cards);
     currentGroupId = groupId;
