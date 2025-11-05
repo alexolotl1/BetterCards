@@ -17,13 +17,15 @@ body {
     flex: 1; 
 }
 
+/* Responsive sidebar that scales with viewport width but has a minimum size */
 .sidebar {
-    width: 250px;
+    width: clamp(250px, 20vw, 400px); /* min: 250px, preferred: 20% of viewport, max: 400px */
     background-color: #323655;
     color: white;
     height: 100%;
     overflow-y: auto;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease; /* Smooth width changes */
 }
 
 .sidebar-header {
@@ -97,7 +99,6 @@ body {
     background-color: #283593;
     color: white;
     padding: 25px;
-    margin-bottom: 20px;
 }
 
 .group-banner h2 {
@@ -221,13 +222,8 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
+    margin-top: 20px;
     margin-bottom: 8px;
-}
-
-.card-content {
-    flex: 1;
-    display: flex;
-    gap: 12px;
 }
 
 .card-actions {
@@ -258,35 +254,329 @@ body {
 .study-area {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    padding: 20px;
+    height: 100vh;
 }
 
-.study-header {
+.study-sidebar {
+    width: clamp(250px, 20vw, 400px);
+    background-color: #323655;
+    color: white;
+    padding: 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.study-sidebar h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.study-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .study-stats {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    gap: 10px;
     font-size: 1.1em;
-    color: #333;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
 }
 
-.study-card-container {
+.study-modes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.mode-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: white;
+}
+
+.mode-switch input {
+    cursor: pointer;
+}
+
+/* Confidence level chart container */
+.confidence-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 25px 0;
+    background-color: rgba(255, 255, 255, 0.08);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 12px;
+    width: 100%;
+}
+
+/* Individual chart bar container */
+.chart-bar {
+    display: grid;
+    grid-template-columns: 30% minmax(100px, 1fr) 60px;
+    align-items: center;
+    height: 32px;
+    padding: 0 10px;
+}
+
+/* Bar label (Level 1-5) */
+.bar-label {
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    color: white;
+}
+
+/* Progress bar container and fill */
+.bar-fill {
+    height: 100%;
+    width: 0;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 6px;
+}
+
+/* Color gradients for different levels */
+.chart-bar[data-level="5"] .bar-fill { 
+    background: linear-gradient(to right, #00b0ff, #2979ff);
+    box-shadow: 0 0 10px rgba(0, 176, 255, 0.3);
+}
+.chart-bar[data-level="4"] .bar-fill { 
+    background: linear-gradient(to right, #00c853, #64dd17);
+    box-shadow: 0 0 10px rgba(0, 200, 83, 0.3);
+}
+.chart-bar[data-level="3"] .bar-fill { 
+    background: linear-gradient(to right, #ffd600, #ffab00);
+    box-shadow: 0 0 10px rgba(255, 214, 0, 0.3);
+}
+.chart-bar[data-level="2"] .bar-fill { 
+    background: linear-gradient(to right, #ff9100, #ff6d00);
+    box-shadow: 0 0 10px rgba(255, 145, 0, 0.3);
+}
+.chart-bar[data-level="1"] .bar-fill { 
+    background: linear-gradient(to right, #ff5252, #d50000);
+    box-shadow: 0 0 10px rgba(255, 82, 82, 0.3);
+}
+
+/* Card count display */
+.bar-count {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: white;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.study-content {
     flex: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 20px;
     padding: 20px;
+    background-color: #f0f2f5;
+}
+
+/* Responsive study card that scales with viewport size while maintaining aspect ratio */
+.study-card {
+    width: clamp(300px, 60vw, 800px); /* min: 300px, preferred: 60% of viewport, max: 800px */
+    min-height: clamp(200px, 40vh, 500px); /* min: 200px, preferred: 40% of viewport, max: 500px */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Card transition animations */
+.study-card.card-exit {
+    animation: cardExit 0.3s ease-out forwards;
+}
+
+.study-card.card-enter {
+    animation: cardEnter 0.3s ease-in forwards;
+}
+
+/* Card content container */
+.card-content {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    flex: 1;
+    gap: 12px;
+}
+
+
+/* Card text styling and animations */
+.card-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    text-align: center;
+    padding: 20px;
+    transform: translateY(0);
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 150px;
+    position: relative;
+}
+
+/* Text slide up animation */
+.card-text.sliding-up {
+    transform: translateY(-120%);
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+/* Text slide in animation */
+.card-text.sliding-in {
+    transform: translateY(120%);
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+/* Card divider styling and animation */
+.card-divider {
+    height: 2px;
+    background-color: #686868;
+    margin: 10px 20px;
+    transform: scaleX(0);
+    z-index: 100;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+}
+
+.card-divider.visible {
+    transform: scaleX(1);
+    opacity: 1;
+}
+
+/* Card transition animations */
+@keyframes cardExit {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+@keyframes cardEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Card content container with improved animation support */
+.study-card-content {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-text.hidden {
+    display: none;
+}
+
+.card-divider.hidden {
+    display: none;
+}
+
+/* Confidence buttons container - now below card */
+.confidence-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    background: transparent;
+    position: relative;
+    z-index: 100;
+}
+
+.confidence-buttons.hidden {
+    display: none;
+}
+
+/* Individual confidence buttons with improved styling */
+.confidence-btn {
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.3em;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    position: relative;
+    top: 0;
+}
+
+/* Confidence button colors with gradients */
+.confidence-btn[data-level="1"] { 
+    background: linear-gradient(135deg, #ff5252, #d50000);
+}
+.confidence-btn[data-level="2"] { 
+    background: linear-gradient(135deg, #ff9100, #ff6d00);
+}
+.confidence-btn[data-level="3"] { 
+    background: linear-gradient(135deg, #ffd600, #ffab00);
+    color: #333;
+}
+.confidence-btn[data-level="4"] { 
+    background: linear-gradient(135deg, #00c853, #64dd17);
+}
+.confidence-btn[data-level="5"] { 
+    background: linear-gradient(135deg, #00b0ff, #2979ff);
+}
+
+/* Improved hover and active states */
+.confidence-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.confidence-btn:active {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
 }
 
 .next-btn {
@@ -311,9 +601,8 @@ body {
 }
 
 .study-card {
-    width: 100%;
-    max-width: 600px;
-    height: 400px;
+    width: 70%;
+    height: 60%;
     perspective: 1000px;
     cursor: pointer;
 }
@@ -374,6 +663,15 @@ body {
 }
 
 .close-modal {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-group-modal {
     position: absolute;
     right: 20px;
     top: 10px;

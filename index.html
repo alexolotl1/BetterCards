@@ -42,6 +42,10 @@
                         <span class="stat-label">Last Studied:</span>
                         <span id="lastStudied" class="stat-value">Never</span>
                     </div>
+                    <div class="stat">
+                        <span class="stat-label">Confidence:</span>
+                        <span id="groupConfidence" class="stat-value">No data yet</span>
+                    </div>
                 </div>
             </div>
             <div class="content-controls">
@@ -54,19 +58,67 @@
             </div>
 
             <div id="studyView" class="study-area hidden">
-                <div class="study-header">
-                    <div class="study-stats">
-                        <div>Cards Studied: <span id="cardsStudied">0</span></div>
-                        <div>Time: <span id="studyTime">00:00</span></div>
-                    </div>
-                    <button id="stopStudyBtn" class="control-btn">Stop Studying</button>
-                </div>
-                <div class="study-card-container">
-                    <div class="study-card">
-                        <div class="card-inner">
-                            <div class="card-face card-front"></div>
-                            <div class="card-face card-back"></div>
+                <div class="study-sidebar">
+                    <h2 id="studyGroupName"></h2>
+                    <div class="study-controls">
+                        <div class="study-stats">
+                            <div>Cards Studied: <span id="cardsStudied">0</span></div>
+                            <div>Time: <span id="studyTime">00:00</span></div>
                         </div>
+                        <button id="stopStudyBtn" class="control-btn">Stop Studying</button>
+                        <div class="study-modes">
+                            <label class="mode-switch">
+                                <input type="checkbox" id="knownLearningMode" checked>
+                                Known Learning Mode
+                            </label>
+                            <label class="mode-switch">
+                                <input type="checkbox" id="flippedCardsMode">
+                                Flipped Cards Mode
+                            </label>
+                        </div>
+                        <div id="confidenceLevels" class="confidence-chart">
+                            <div class="chart-bar" data-level="5">
+                                <div class="bar-label">Level 5</div>
+                                <div class="bar-fill"></div>
+                                <div class="bar-count">0</div>
+                            </div>
+                            <div class="chart-bar" data-level="4">
+                                <div class="bar-label">Level 4</div>
+                                <div class="bar-fill"></div>
+                                <div class="bar-count">0</div>
+                            </div>
+                            <div class="chart-bar" data-level="3">
+                                <div class="bar-label">Level 3</div>
+                                <div class="bar-fill"></div>
+                                <div class="bar-count">0</div>
+                            </div>
+                            <div class="chart-bar" data-level="2">
+                                <div class="bar-label">Level 2</div>
+                                <div class="bar-fill"></div>
+                                <div class="bar-count">0</div>
+                            </div>
+                            <div class="chart-bar" data-level="1">
+                                <div class="bar-label">Level 1</div>
+                                <div class="bar-fill"></div>
+                                <div class="bar-count">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="study-content">
+                    <div class="study-card">
+                        <div class="study-card-content">
+                            <div class="card-text front"></div>
+                            <hr class="card-divider hidden">
+                            <div class="card-text back hidden"></div>
+                        </div>
+                    </div>
+                    <div id="confidenceButtons" class="confidence-buttons hidden">
+                        <button class="confidence-btn" data-level="1">1</button>
+                        <button class="confidence-btn" data-level="2">2</button>
+                        <button class="confidence-btn" data-level="3">3</button>
+                        <button class="confidence-btn" data-level="4">4</button>
+                        <button class="confidence-btn" data-level="5">5</button>
                     </div>
                     <button id="nextCardBtn" class="control-btn next-btn">
                         <span class="arrow">→</span>
@@ -98,7 +150,7 @@
             <h2>Create New Group</h2>
             <div class="form-group">
                 <label for="groupName">Group Name:</label>
-                <input type="text" id="groupName" />
+                <textarea id="groupName" rows="2"></textarea>
             </div>
             <button id="saveGroupBtn" class="control-btn">Create Group</button>
         </div>
