@@ -168,7 +168,7 @@ body {
 }
 
 .control-btn {
-    padding: 10px 20px;
+    padding: 10px 20px 10px;
     background-color: #283593;
     color: white;
     border: none;
@@ -181,6 +181,14 @@ body {
 .control-btn:hover {
     background-color: #1a237e;
 }
+
+#startStudyBtn {
+    background-color: #4f5ad6;
+    height: 100%;
+    width: 12%;
+}
+
+
 
 #cards-container {
     display: flex;
@@ -646,6 +654,15 @@ body {
 }
 
 .close-modal {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-import-modal {
     position: absolute;
     right: 20px;
     top: 10px;

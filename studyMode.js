@@ -55,16 +55,23 @@ function updateConfidenceChart(levels) {
 }
 
 function updateGroupConfidenceSummary(levels) {
-    const totalCards = Object.values(levels).reduce((sum, level) => sum + level.count, 0);
-    const avgLevel = Object.entries(levels).reduce((sum, [level, data]) => {
+    // Filter out cards that haven't been tested (no confidence level)
+    const testedCards = Object.values(levels).reduce((sum, level) => sum + level.count, 0);
+    
+    if (testedCards === 0) {
+        document.getElementById('groupConfidence').textContent = 'No cards tested yet';
+        return;
+    }
+    
+    const totalPoints = Object.entries(levels).reduce((sum, [level, data]) => {
         return sum + (level * data.count);
-    }, 0) / totalCards || 0;
+    }, 0);
+    
+    const confidencePercentage = (totalPoints / (testedCards * 5)) * 100;
     
     const summaryElem = document.getElementById('groupConfidence');
     if (summaryElem) {
-        summaryElem.textContent = avgLevel > 0 
-            ? `Avg. Confidence: ${avgLevel.toFixed(1)}`
-            : 'No confidence data yet';
+        summaryElem.textContent = `Confidence: ${confidencePercentage.toFixed(1)}%`;
     }
 }
 

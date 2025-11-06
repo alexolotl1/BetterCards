@@ -16,37 +16,58 @@ document.getElementById('stopStudyBtn').addEventListener('click', stopStudyMode)
 document.querySelector('.study-card').addEventListener('click', handleCardFlip);
 document.getElementById('nextCardBtn').addEventListener('click', handleNextCard);
 
+// Action buttons
 const createCardBtn = document.getElementById('createCardBtn');
 const createGroupBtn = document.getElementById('createGroupBtn');
+const importCardsBtn = document.getElementById('importCardsBtn');
 const deleteGroupBtn = document.getElementById('deleteGroupBtn');
-const cardModal = document.getElementById('createCardModal');
-const groupModal = document.getElementById('createGroupModal');
-const closeCardModal = document.querySelector('.close-modal');
-const closeGroupModal = document.querySelector('.close-group-modal');
 const saveCardBtn = document.getElementById('saveCardBtn');
 const saveGroupBtn = document.getElementById('saveGroupBtn');
+
+// Modal elements
+const cardModal = document.getElementById('createCardModal');
+const groupModal = document.getElementById('createGroupModal');
+const importModal = document.getElementById('importCardsModal');
+const closeCardModal = document.querySelector('.close-modal');
+const closeGroupModal = document.querySelector('.close-group-modal');
+const closeImportModal = document.querySelector('.close-import-modal');
+
+// Group related elements
 const groupNameInput = document.getElementById('groupName');
-const cardsContainer = document.getElementById('cards-container');
 const groupList = document.querySelector('.group-list');
 const currentGroupName = document.getElementById('currentGroupName');
+
+// Card container and stats
+const cardsContainer = document.getElementById('cards-container');
 const cardCount = document.getElementById('cardCount');
-const totalStudyTime = document.getElementById('totalStudyTime');
-const lastStudied = document.getElementById('lastStudied');
+
+// Study mode elements
 const startStudyBtn = document.getElementById('startStudyBtn');
 const stopStudyBtn = document.getElementById('stopStudyBtn');
+const studyCard = document.querySelector('.study-card');
 const normalView = document.getElementById('normalView');
 const studyView = document.getElementById('studyView');
-const studyCard = document.querySelector('.study-card');
+
+// Study statistics
+const totalStudyTime = document.getElementById('totalStudyTime');
+const lastStudied = document.getElementById('lastStudied');
 const cardsStudiedElement = document.getElementById('cardsStudied');
 const studyTimeElement = document.getElementById('studyTime');
 
+// Add event listeners for action buttons
 createCardBtn.addEventListener('click', openCardModal);
 createGroupBtn.addEventListener('click', openGroupModal);
+importCardsBtn.addEventListener('click', openImportModal);
 deleteGroupBtn.addEventListener('click', deleteCurrentGroup);
+
+// Add event listeners for modal controls
 closeCardModal.addEventListener('click', () => closeModal(cardModal));
 closeGroupModal.addEventListener('click', () => closeModal(groupModal));
+closeImportModal.addEventListener('click', () => closeModal(importModal));
 saveCardBtn.addEventListener('click', saveCard);
 saveGroupBtn.addEventListener('click', saveGroup);
+document.getElementById('saveImportBtn').addEventListener('click', importCards);
+document.querySelector('.close-import-modal').addEventListener('click', () => closeModal(importModal));
 studyCard.addEventListener('click', handleCardFlip);
 
 window.addEventListener('click', (e) => {
@@ -54,8 +75,70 @@ window.addEventListener('click', (e) => {
         closeModal(cardModal);
     } else if (e.target === groupModal) {
         closeModal(groupModal);
+    } else if (e.target === importModal) {
+        closeModal(importModal);
     }
 });
+
+function openImportModal() {
+    if (!currentGroupId) {
+        alert('Please select a group first!');
+        return;
+    }
+    importModal.style.display = 'block';
+}
+
+function importCards() {
+    if (!currentGroupId) {
+        alert('Please select a group first!');
+        return;
+    }
+
+    const importText = document.getElementById('importContent').value.trim();
+    if (!importText) {
+        alert('Please enter some content to import!');
+        return;
+    }
+
+    const rows = importText.split('\n');
+    let importedCards = [];
+    let errorLines = [];
+
+    rows.forEach((row, index) => {
+        if (!row.trim()) return; // Skip empty lines
+        
+        const sides = row.split('//').map(side => side.trim());
+        if (sides.length !== 2 || !sides[0] || !sides[1]) {
+            errorLines.push(index + 1);
+            return;
+        }
+
+        importedCards.push({
+            id: Date.now() + Math.random().toString(36).substr(2, 9),
+            front: sides[0],
+            back: sides[1],
+            knownLevel: 0
+        });
+    });
+
+    if (errorLines.length > 0) {
+        alert(`Warning: Lines ${errorLines.join(', ')} were skipped due to invalid format`);
+    }
+
+    if (importedCards.length > 0) {
+        const groups = JSON.parse(localStorage.getItem('cardGroups')) || [];
+        const groupIndex = groups.findIndex(g => g.id === currentGroupId);
+        
+        if (groupIndex !== -1) {
+            groups[groupIndex].cards = groups[groupIndex].cards || [];
+            groups[groupIndex].cards.push(...importedCards);
+            localStorage.setItem('cardGroups', JSON.stringify(groups));
+            document.getElementById('importContent').value = '';
+            alert(`Successfully imported ${importedCards.length} cards!`);
+            closeModal(importModal);
+        }
+    }
+}
 
 function openCardModal() {
     if (!currentGroupId) {

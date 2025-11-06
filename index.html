@@ -49,8 +49,9 @@
                 </div>
             </div>
             <div class="content-controls">
-                <button id="startStudyBtn" class="control-btn">Start Studying</button>
+                <button id="importCardsBtn" class="control-btn">Import Cards</button>
                 <button id="createCardBtn" class="control-btn">Create Flashcard</button>
+                <button id="startStudyBtn" class="control-btn">Start Studying</button>
             </div>
             
             <div id="normalView" class="cards-area">
@@ -153,6 +154,27 @@
                 <textarea id="groupName" rows="2"></textarea>
             </div>
             <button id="saveGroupBtn" class="control-btn">Create Group</button>
+        </div>
+    </div>
+
+    <!-- Import Cards Modal -->
+    <div id="importCardsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-import-modal">&times;</span>
+            <h2>Import Cards</h2>
+            <div class="form-group">
+                <label for="importContent">
+                    Enter your flashcards below, one per line:<br>
+                    <small style="color: #666;">
+                        Format: front side // back side<br>
+                        Example:<br>
+                        What is the capital of France? // Paris<br>
+                        HTML stands for? // HyperText Markup Language
+                    </small>
+                </label>
+                <textarea id="importContent" rows="10" placeholder="Front side // Back side"></textarea>
+            </div>
+            <button id="saveImportBtn" class="control-btn">Import Cards</button>
         </div>
     </div>
 
