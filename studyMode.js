@@ -109,7 +109,7 @@ export function startStudyMode(groupId) {
     
     newKnownModeCheckbox.addEventListener('change', (e) => {
         isKnownLearningMode = e.target.checked;
-        document.getElementById('confidenceButtons').classList.toggle('hidden', !isKnownLearningMode);
+        document.getElementById('confidence-label').classList.toggle('hidden', !isKnownLearningMode);
         document.getElementById('confidenceLevels').classList.toggle('hidden', !isKnownLearningMode);
         document.getElementById('nextCardBtn').classList.toggle('hidden', isKnownLearningMode);
         updateConfidenceChart(calculateConfidenceLevels(currentGroup.cards));
@@ -165,7 +165,7 @@ export function stopStudyMode() {
     backText.classList.add('hidden');
     divider.classList.add('hidden');
 
-    document.getElementById('confidenceButtons').classList.add('hidden');
+    document.getElementById('confidence-label').classList.add('hidden');
     document.getElementById('confidenceLevels').classList.add('hidden');
 }
 
@@ -183,7 +183,7 @@ export function handleCardFlip() {
         divider.classList.toggle('hidden');
         
         if (!backText.classList.contains('hidden') && isKnownLearningMode) {
-            document.getElementById('confidenceButtons').classList.remove('hidden');
+            document.getElementById('confidence-label').classList.remove('hidden');
         }
     }, 150); 
     
@@ -202,7 +202,7 @@ export function handleNextCard() {
     studyCard.classList.add('card-exit');
 
     setTimeout(() => {
-        document.getElementById('confidenceButtons').classList.add('hidden');
+        document.getElementById('confidence-label').classList.add('hidden');
         studyCard.classList.remove('card-exit');
         showNextStudyCard();
         
@@ -258,7 +258,7 @@ function showNextStudyCard() {
     backText.classList.add('hidden');
     divider.classList.add('hidden');
     
-    document.getElementById('confidenceButtons').classList.add('hidden');
+    document.getElementById('confidence-label').classList.add('hidden');
 }
 
 function updateCardConfidence(level) {
